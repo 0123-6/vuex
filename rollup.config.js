@@ -44,7 +44,11 @@ function createEntry(config) {
   }))
 
   if (config.transpile !== false) {
-    c.plugins.push(buble())
+    c.plugins.push(buble({
+      transforms: {
+        forOf: false,
+      }
+    }))
   }
 
   c.plugins.push(resolve())

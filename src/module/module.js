@@ -1,5 +1,3 @@
-import { forEachValue } from '../util'
-
 // Base data struct for store's module, package with some attribute and method
 export default class Module {
   constructor (rawModule, runtime) {
@@ -48,24 +46,32 @@ export default class Module {
   }
 
   forEachChild (fn) {
-    forEachValue(this._children, fn)
+    for (const [key, value] of Object.entries(this._children)) {
+      fn(value, key)
+    }
   }
 
   forEachGetter (fn) {
     if (this._rawModule.getters) {
-      forEachValue(this._rawModule.getters, fn)
+      for (const [key, value] of Object.entries(this._rawModule.getters)) {
+        fn(value, key)
+      }
     }
   }
 
   forEachAction (fn) {
     if (this._rawModule.actions) {
-      forEachValue(this._rawModule.actions, fn)
+      for (const [key, value] of Object.entries(this._rawModule.actions)) {
+        fn(value, key)
+      }
     }
   }
 
   forEachMutation (fn) {
     if (this._rawModule.mutations) {
-      forEachValue(this._rawModule.mutations, fn)
+      for (const [key, value] of Object.entries(this._rawModule.mutations)) {
+        fn(value, key)
+      }
     }
   }
 }

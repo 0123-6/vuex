@@ -1,5 +1,3 @@
-import { isObject } from './util'
-
 /**
  * Reduce the code which written in Vue.js for getting the state.
  * @param {String} [namespace] - Module's namespace
@@ -157,6 +155,7 @@ function normalizeMap (map) {
  * @return {Boolean}
  */
 function isValidMap (map) {
+  const isObject = obj => typeof obj === 'object' && obj !== null
   return Array.isArray(map) || isObject(map)
 }
 

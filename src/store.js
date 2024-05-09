@@ -1,10 +1,7 @@
-import applyMixin from './mixin'
 import ModuleCollection from './module/module-collection'
-import { forEachValue, isObject, isPromise, assert, partial } from './util'
+import { assert } from './util'
 
-let Vue // bind on install
-
-export class Store {
+export default class Store {
   constructor (options = {}) {
     // Auto install if it is not done yet and `window` has `Vue`.
     // To allow users to avoid auto-installation in some cases,
@@ -281,16 +278,18 @@ function resetStoreVM (store, state, hot) {
   store._makeLocalGettersCache = Object.create(null)
   const wrappedGetters = store._wrappedGetters
   const computed = {}
-  forEachValue(wrappedGetters, (fn, key) => {
+  for (const [key, fn] of wrappedGetters) {
     // use computed to leverage its lazy-caching mechanism
     // direct inline function use will lead to closure preserving oldVm.
-    // using partial to return function with only arguments preserved in closure environment.
-    computed[key] = partial(fn, store)
+    // set function with only arguments preserved in closure environment.
+    computed[key] = function () {
+      fn(store)
+    }
     Object.defineProperty(store.getters, key, {
       get: () => store._vm[key],
       enumerable: true // for local getters
     })
-  })
+  }
 
   // use a Vue instance to store the state tree
   // suppress warnings just in case the user has added
@@ -473,17 +472,12 @@ function registerAction (store, type, handler, local) {
       rootGetters: store.getters,
       rootState: store.state
     }, payload)
+    // 判断是否是Promise对象
+    const isPromise = val => val && typeof val.then === 'function'
     if (!isPromise(res)) {
       res = Promise.resolve(res)
     }
-    if (store._devtoolHook) {
-      return res.catch(err => {
-        store._devtoolHook.emit('vuex:error', err)
-        throw err
-      })
-    } else {
-      return res
-    }
+    return res
   })
 }
 
@@ -517,6 +511,7 @@ function getNestedState (state, path) {
 }
 
 function unifyObjectStyle (type, payload, options) {
+  const isObject = obj => typeof obj === 'object' && obj !== null
   if (isObject(type) && type.type) {
     options = payload
     payload = type
@@ -528,17 +523,4 @@ function unifyObjectStyle (type, payload, options) {
   }
 
   return { type, payload, options }
-}
-
-export function install (_Vue) {
-  if (Vue && _Vue === Vue) {
-    if (__DEV__) {
-      console.error(
-        '[vuex] already installed. Vue.use(Vuex) should be called only once.'
-      )
-    }
-    return
-  }
-  Vue = _Vue
-  applyMixin(Vue)
 }

@@ -3,7 +3,9 @@
  */
 
 // 导入Store, install函数,是Vuex本身
-import { Store, install } from './store'
+import Store from './store'
+// 安装函数
+import install from './install'
 // 导入在组件内快速获取vuex值的函数
 import { mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers } from './helpers'
 
@@ -11,7 +13,6 @@ import { mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers
 export default {
   Store,
   install,
-  version: '__VERSION__',
   
   mapState,
   mapMutations,

@@ -1,5 +1,5 @@
 import Module from './module'
-import { assert, forEachValue } from '../util'
+import { assert } from '../util'
 
 export default class ModuleCollection {
   constructor (rawRootModule) {
@@ -40,9 +40,9 @@ export default class ModuleCollection {
 
     // register nested modules
     if (rawModule.modules) {
-      forEachValue(rawModule.modules, (rawChildModule, key) => {
+      for (const [key, rawChildModule] of Object.entries(rawModule.modules)) {
         this.register(path.concat(key), rawChildModule, runtime)
-      })
+      }
     }
   }
 
@@ -131,13 +131,12 @@ function assertRawModule (path, rawModule) {
     if (!rawModule[key]) return
 
     const assertOptions = assertTypes[key]
-
-    forEachValue(rawModule[key], (value, type) => {
+    for (const [type, value] of Object.entries(rawModule[key])) {
       assert(
         assertOptions.assert(value),
         makeAssertionMessage(path, key, type, value, assertOptions.expected)
       )
-    })
+    }
   })
 }
 
