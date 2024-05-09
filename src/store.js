@@ -1,5 +1,4 @@
 import applyMixin from './mixin'
-import devtoolPlugin from './plugins/devtool'
 import ModuleCollection from './module/module-collection'
 import { forEachValue, isObject, isPromise, assert, partial } from './util'
 
@@ -63,11 +62,6 @@ export class Store {
 
     // apply plugins
     plugins.forEach(plugin => plugin(this))
-
-    const useDevtools = options.devtools !== undefined ? options.devtools : Vue.config.devtools
-    if (useDevtools) {
-      devtoolPlugin(this)
-    }
   }
 
   get state () {
