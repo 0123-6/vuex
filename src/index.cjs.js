@@ -12,15 +12,10 @@ export default {
   Store,
   install,
   version: '__VERSION__',
+  
   mapState,
   mapMutations,
   mapGetters,
   mapActions,
   createNamespacedHelpers
-}
-
-export const b = {
-  Store,
-  install,
-  version: '__VERSION__'
 }
