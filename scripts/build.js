@@ -14,7 +14,6 @@ async function build(config) {
 }
 
 async function copy() {
-  await fs.copy('src/index.mjs', 'dist/vuex.mjs')
 }
 
 function checkAllSizes(files) {
